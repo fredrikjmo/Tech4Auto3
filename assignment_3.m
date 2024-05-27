@@ -31,4 +31,4 @@ poles = [-1+1i -1-1i -1.5 -0.5];
 
 K = place(A,B_1, poles);
 
-K_ff = 1;
+K_ff = (m_v*V_x^2/l)*(l_r/C_f-l_f/C_r+l_f/C_r*K(3))+l-l_r*K(3);
