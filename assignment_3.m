@@ -9,9 +9,9 @@ l_f = 1.3;
 l = l_f + l_r;
 J_psi = 2875;
 
-delta_constraint = 25;
+delta_constraint = deg2rad(25);
 
-V_x = 10; % [m/s]
+V_x = 22.2; % [m/s] (~80 km/h)
 
 a_11 = 0;
 a_12 = 1;
@@ -54,26 +54,22 @@ A = [a_11 a_12 a_13 a_14;
 B_1 = [b1_1; b1_2; b1_3; b1_4];
 B_2 = [b2_1; b2_2; b2_3; b2_4];
 
-B = [B_1 B_2];
-
 C = eye(4);
 
 %% LQR Feedback and feedforward control matrices
 
-q_11 = 100;
-q_22 = 1;
-q_33 = 1;
-q_44 = 1;
+q_11 = 10;  % Constraint on lateral deviation
+q_22 = 200; % Constraint on lateral deviation rate of change
+q_33 = 10;  % Constraint on relative yaw deviation
+q_44 = 300; % Constraint on relative yaw deviation rate of change
 
 Q = [q_11 0 0 0;
      0 q_22 0 0;
      0 0 q_33 0;
      0 0 0 q_44];
 
-R = 1;
+R = 1; % Constraint on control signal (steering angle)
 
 [K,S,P] = lqr(A,B_1,Q,R);
 
 K_ff = (m_v*V_x^2/l)*(l_r/C_f-l_f/C_r+(l_f/C_r)*K(3))+l-l_r*K(3);
-
-
