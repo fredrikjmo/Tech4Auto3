@@ -27,6 +27,8 @@ C = eye(4);
 
 %% Feedback and feedforward control matrices
 
-K = [1 1 1 1];
+poles = [-1+1i -1-1i -1.5 -0.5];
+
+K = place(A,B_1, poles);
 
 K_ff = 1;
