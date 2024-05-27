@@ -9,9 +9,9 @@ l_f = 1.3;
 l = l_f + l_r;
 J_psi = 2875;
 
-delta_constraint = deg2rad(25);
+delta_constraint = 25;
 
-V_x = 20; % [m/s]
+V_x = 10; % [m/s]
 
 a_11 = 0;
 a_12 = 1;
@@ -54,12 +54,26 @@ A = [a_11 a_12 a_13 a_14;
 B_1 = [b1_1; b1_2; b1_3; b1_4];
 B_2 = [b2_1; b2_2; b2_3; b2_4];
 
+B = [B_1 B_2];
+
 C = eye(4);
 
-%% Feedback and feedforward control matrices
+%% LQR Feedback and feedforward control matrices
 
-poles = [-1+1i -1-1i -1.5 -0.5];
+q_11 = 100;
+q_22 = 1;
+q_33 = 1;
+q_44 = 1;
 
-K = place(A,B_1, poles);
+Q = [q_11 0 0 0;
+     0 q_22 0 0;
+     0 0 q_33 0;
+     0 0 0 q_44];
 
-K_ff = (m_v*V_x^2/l)*(l_r/C_f-l_f/C_r+l_f/C_r*K(3))+l-l_r*K(3);
+R = 1;
+
+[K,S,P] = lqr(A,B_1,Q,R);
+
+K_ff = (m_v*V_x^2/l)*(l_r/C_f-l_f/C_r+(l_f/C_r)*K(3))+l-l_r*K(3);
+
+
